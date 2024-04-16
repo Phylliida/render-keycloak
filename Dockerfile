@@ -59,5 +59,5 @@ ENV KC_DB_URL=postgresql://${DB_USERNAME}:${DB_PASSWORD}@${DB_URL}:${DB_PORT}/${
 RUN mkdir -p $HOME/.postgresql
 ADD ${CERT_PATH} $HOME/.postgresql/root.crt
 
-ENTRYPOINT [“/opt/keycloak/bin/kc.sh”]
-CMD [“start”,“–optimized”]
+ENTRYPOINT ["/opt/keycloak/bin/kc.sh"]
+CMD ["start","–optimized"]
