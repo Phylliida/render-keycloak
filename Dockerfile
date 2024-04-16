@@ -60,4 +60,4 @@ RUN mkdir -p $HOME/.postgresql
 ADD ${CERT_PATH} $HOME/.postgresql/root.crt
 
 ENTRYPOINT ["/opt/keycloak/bin/kc.sh"]
-CMD ["start", '--optimized', '--help']
+CMD ["start","--help"]
