@@ -28,7 +28,7 @@ ARG DB_URL
 ARG DB_DATABASE
 # probably 26257
 ARG DB_PORT
-# like 'https://cockroachlabs.cloud/clusters/fffffff-aaaa-bbbb-cccc-dddddddddd/cert'
+# like https://cockroachlabs.cloud/clusters/fffffff-aaaa-bbbb-cccc-dddddddddd/cert
 ARG CERT_PATH
 
 # public
@@ -56,7 +56,7 @@ ENV KEYCLOAK_ADMIN=$ADMIN
 ENV KEYCLOAK_ADMIN_PASSWORD=$ADMIN_PASSWORD
 ENV KC_DB_URL=postgresql://${DB_USERNAME}:${DB_PASSWORD}@${DB_URL}:${DB_PORT}/${KC_DB_URL_DATABASE}?sslmode=verify-full
 
-RUN curl --create-dirs -o $HOME/.postgresql/root.crt ${CERT_PATH}
+RUN curl --create-dirs -o $HOME/.postgresql/root.crt '${CERT_PATH}'
 
 ENTRYPOINT [“/opt/keycloak/bin/kc.sh”]
 CMD [“start”,“–optimized”]
