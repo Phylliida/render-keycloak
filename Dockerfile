@@ -45,9 +45,9 @@ ENV KC_DB_PASSWORD=$DB_PASSWORD
 #ENV KC_HOSTNAME_STRICT=false
 ENV KC_HOSTNAME=render-keycloak.onrender.com
 ENV KC_HOSTNAME_ADMIN=render-keycloak.onrender.com
-#ENV KC_HTTP_ENABLED=true
-#ENV KC_HTTP_PORT=8443
-#ENV KC_HTTPS_PORT=8444
+ENV KC_HTTP_ENABLED=true
+ENV KC_HTTP_PORT=8443
+ENV KC_HTTPS_PORT=8444
 #ENV KC_PROXY=edge
 #ENV KC_LOG_LEVEL=INFO
 #ENV KC_HOSTNAME_STRICT_HTTPS=false
@@ -58,6 +58,7 @@ ENV KEYCLOAK_ADMIN_PASSWORD=$ADMIN_PASSWORD
 ENV KC_DB_URL=jdbc:postgresql://${DB_URL}:${DB_PORT}/${DB_DATABASE}
 
 RUN keytool -genkeypair -storepass password -storetype PKCS12 -keyalg RSA -keysize 2048 -dname "CN=server" -alias server -ext "SAN:c=DNS:localhost,IP:0.0.0.0" -keystore conf/server.keystore
+# db may seem redundant but it is not
 RUN /opt/keycloak/bin/kc.sh build --db=postgres
 FROM quay.io/keycloak/keycloak:21.1.1
 COPY --from=builder /opt/keycloak/ /opt/keycloak/
@@ -101,9 +102,9 @@ ENV KC_DB_PASSWORD=$DB_PASSWORD
 #ENV KC_HOSTNAME_STRICT=false
 ENV KC_HOSTNAME=render-keycloak.onrender.com
 ENV KC_HOSTNAME_ADMIN=render-keycloak.onrender.com
-#ENV KC_HTTP_ENABLED=true
-#ENV KC_HTTP_PORT=8443
-#ENV KC_HTTPS_PORT=8444
+ENV KC_HTTP_ENABLED=true
+ENV KC_HTTP_PORT=8443
+ENV KC_HTTPS_PORT=8444
 #ENV KC_PROXY=edge  
 #ENV KC_LOG_LEVEL=INFO
 #ENV KC_HOSTNAME_STRICT_HTTPS=false
@@ -128,4 +129,4 @@ EXPOSE 8444
 ENTRYPOINT ["/opt/keycloak/bin/kc.sh"]
 # even though we build, using --optimized disallows postgresql databases so we need this workaround https://github.com/keycloak/keycloak/issues/15898
 # in other words don't add optimzied here
-CMD ["start", "--auto-build", "--db=postgres"]   
+CMD ["start", "--db=postgres"]   
