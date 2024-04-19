@@ -62,7 +62,7 @@ ENV KC_PROXY=passthrough
 ENV KC_PROXY_HEADERS=xforwarded
 ENV KEYCLOAK_ADMIN=$ADMIN
 ENV KEYCLOAK_ADMIN_PASSWORD=$ADMIN_PASSWORD
-ENV KC_DB_URL=jdbc:h2:postgresql://${DB_URL}:${DB_PORT}/${KC_DB_URL_DATABASE}
+ENV KC_DB_URL=jdbc:h2//${DB_URL}:${DB_PORT}/${KC_DB_URL_DATABASE}
 # ENV KC_DB_URL=jdbc:postgresql://${DB_URL}:${DB_PORT}/${DB_DATABASE}
 #ENV KEYCLOAK_HTTPS_CERTIFICATE=https://render-keycloak.onrender.com
 #ENV KEYCLOAK_HTTPS_KEY=https://render-keycloak.onrender.com
@@ -74,4 +74,4 @@ EXPOSE 8444
 # ADD ${CERT_PATH} $HOME/.postgresql/root.crt
 
 ENTRYPOINT ["/opt/keycloak/bin/kc.sh"]
-CMD ["start"]   
+CMD ["start", '--verbose']   
