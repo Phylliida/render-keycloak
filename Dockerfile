@@ -11,7 +11,7 @@ ENV KC_METRICS_ENABLED=true
 WORKDIR /opt/keycloak
 
 RUN keytool -genkeypair -storepass password -storetype PKCS12 -keyalg RSA -keysize 2048 -dname "CN=server" -alias server -ext "SAN:c=DNS:localhost,IP:0.0.0.0" -keystore conf/server.keystore
-RUN /opt/keycloak/bin/kc.sh build
+#RUN /opt/keycloak/bin/kc.sh build
 FROM quay.io/phasetwo/keycloak-crdb:latest
 COPY --from=builder /opt/keycloak/ /opt/keycloak/
 COPY --from=builder /opt/keycloak/ /opt/keycloak/
@@ -47,10 +47,10 @@ ENV KC_DB_URL_DATABASE=$DB_DATABASE
 ENV KC_DB_SCHEMA=$DB_SCHEMA
 ENV KC_DB_USERNAME=$DB_USERNAME
 ENV KC_DB_PASSWORD=$DB_PASSWORD
-ENV KC_DB_URL_PROPERTIES='?'
-ENV KC_HOSTNAME_STRICT='false'
-ENV KC_HTTP_ENABLED='true'
-ENV KC_PROXY='edge'
+ENV KC_DB_URL_PROPERTIES=?
+ENV KC_HOSTNAME_STRICT=false
+ENV KC_HTTP_ENABLED=true
+ENV KC_PROXY=edge
 ENV KC_LOG_LEVEL=INFO
 ENV KEYCLOAK_ADMIN=$ADMIN
 ENV KEYCLOAK_ADMIN_PASSWORD=$ADMIN_PASSWORD
@@ -60,4 +60,4 @@ RUN mkdir -p $HOME/.postgresql
 ADD ${CERT_PATH} $HOME/.postgresql/root.crt
 
 ENTRYPOINT ["/opt/keycloak/bin/kc.sh"]
-CMD ["start","--http-enabled=true"]
+CMD ["start","-b", "0.0.0.0", "-bmanagement","0.0.0.0"]
