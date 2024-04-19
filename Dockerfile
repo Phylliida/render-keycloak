@@ -55,9 +55,13 @@ ENV KC_LOG_LEVEL=INFO
 ENV KEYCLOAK_ADMIN=$ADMIN
 ENV KEYCLOAK_ADMIN_PASSWORD=$ADMIN_PASSWORD
 ENV KC_DB_URL=postgresql://${DB_USERNAME}:${DB_PASSWORD}@${DB_URL}:${DB_PORT}/${KC_DB_URL_DATABASE}?sslmode=verify-full
+ENV KEYCLOAK_HTTPS_CERTIFICATE=https://render-keycloak.onrender.com
+ENV KEYCLOAK_HTTPS_KEY=https://render-keycloak.onrender.com
+
+EXPOSE 8443
 
 RUN mkdir -p $HOME/.postgresql
 ADD ${CERT_PATH} $HOME/.postgresql/root.crt
 
 ENTRYPOINT ["/opt/keycloak/bin/kc.sh"]
-CMD ["start","-b", "0.0.0.0", "-bmanagement","0.0.0.0"]
+CMD ["start"]   
