@@ -1,10 +1,10 @@
 # from https://quay.io/repository/phasetwo/keycloak-crdb    
-FROM quay.io/phasetwo/keycloak-crdb:latest as builder
+FROM quay.io/phasetwo/keycloak:latest as builder
 
 # needed for cockroach support
-ENV KB_DB=cockroach
-ENV KC_TRANSACTION_XA_ENABLED=false
-ENV KC_TRANSACTION_JTA_ENABLED=false
+# ENV KB_DB=cockroach
+# ENV KC_TRANSACTION_XA_ENABLED=false
+# ENV KC_TRANSACTION_JTA_ENABLED=false
 
 ENV KC_HEALTH_ENABLED=true
 ENV KC_METRICS_ENABLED=true
@@ -12,7 +12,7 @@ WORKDIR /opt/keycloak
 
 #RUN keytool -genkeypair -storepass password -storetype PKCS12 -keyalg RSA -keysize 2048 -dname "CN=server" -alias server -ext "SAN:c=DNS:localhost,IP:0.0.0.0" -keystore conf/server.keystore
 #RUN /opt/keycloak/bin/kc.sh build
-FROM quay.io/phasetwo/keycloak-crdb:latest
+FROM quay.io/phasetwo/keycloak:latest
 COPY --from=builder /opt/keycloak/ /opt/keycloak/
 COPY --from=builder /opt/keycloak/ /opt/keycloak/
 
@@ -35,15 +35,14 @@ ARG CERT_PATH
 ARG DB_SCHEMA
 
 # needed for cockroach support
-ENV KB_DB=cockroach
-ENV KC_TRANSACTION_XA_ENABLED=false
-ENV KC_TRANSACTION_JTA_ENABLED=false
+ENV KB_DB=postgres
+#ENV KC_TRANSACTION_XA_ENABLED=false
+#ENV KC_TRANSACTION_JTA_ENABLED=false
 
 # set port 8443 to PORT environment variable in render
-
 ENV KC_HTTP_RELATIVE_PATH=/auth
 ENV PROXY_ADDRESS_FORWARDING=true
-ENV KC_DB_URL_HOST=cockroach
+ENV KC_DB_URL_HOST=$DB_URL
 ENV KC_DB_URL_PORT=$DB_PORT
 ENV KC_DB_URL_DATABASE=$DB_DATABASE
 ENV KC_DB_SCHEMA=$DB_SCHEMA
@@ -71,7 +70,7 @@ ENV KEYCLOAK_ADMIN_PASSWORD=$ADMIN_PASSWORD
 EXPOSE 8443
 EXPOSE 8444
 
-RUN mkdir -p $HOME/.postgresql
+#RUN mkdir -p $HOME/.postgresql
 # ADD ${CERT_PATH} $HOME/.postgresql/root.crt
 
 ENTRYPOINT ["/opt/keycloak/bin/kc.sh"]
