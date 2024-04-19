@@ -5,6 +5,7 @@ FROM quay.io/keycloak/keycloak:21.1.1 as builder
 # ENV KB_DB=cockroach
 # ENV KC_TRANSACTION_XA_ENABLED=false
 # ENV KC_TRANSACTION_JTA_ENABLED=false
+# necessary to let us use postgresql
 ENV OPERATOR_KEYCLOAK_IMAGE=quay.io/keycloak/keycloak:21.1.1
 ENV KC_HEALTH_ENABLED=true
 ENV KC_METRICS_ENABLED=true
@@ -41,8 +42,8 @@ ENV KC_HTTP_RELATIVE_PATH=/auth
 #ENV KC_DB_SCHEMA=$DB_SCHEMA
 ENV KC_DB_USERNAME=$DB_USERNAME
 ENV KC_DB_PASSWORD=$DB_PASSWORD
-#ENV KC_DB_URL_PROPERTIES='?'
-#ENV KC_HOSTNAME_STRICT=false
+ENV KC_DB_URL_PROPERTIES='?'
+ENV KC_HOSTNAME_STRICT=false
 ENV KC_HOSTNAME=render-keycloak.onrender.com
 ENV KC_HOSTNAME_ADMIN=render-keycloak.onrender.com
 ENV KC_HTTP_ENABLED=true
@@ -64,6 +65,7 @@ FROM quay.io/keycloak/keycloak:21.1.1
 COPY --from=builder /opt/keycloak/ /opt/keycloak/
 COPY --from=builder /opt/keycloak/ /opt/keycloak/
 
+# necessary to let us use postgresql
 ENV OPERATOR_KEYCLOAK_IMAGE=quay.io/keycloak/keycloak:21.1.1
 
 ARG ADMIN
@@ -98,8 +100,8 @@ ENV KC_HTTP_RELATIVE_PATH=/auth
 #ENV KC_DB_SCHEMA=$DB_SCHEMA
 ENV KC_DB_USERNAME=$DB_USERNAME
 ENV KC_DB_PASSWORD=$DB_PASSWORD
-#ENV KC_DB_URL_PROPERTIES='?'
-#ENV KC_HOSTNAME_STRICT=false
+ENV KC_DB_URL_PROPERTIES='?'
+ENV KC_HOSTNAME_STRICT=false
 ENV KC_HOSTNAME=render-keycloak.onrender.com
 ENV KC_HOSTNAME_ADMIN=render-keycloak.onrender.com
 ENV KC_HTTP_ENABLED=true
@@ -125,6 +127,8 @@ EXPOSE 8444
 
 #RUN mkdir -p $HOME/.postgresql
 # ADD ${CERT_PATH} $HOME/.postgresql/root.crt
+
+# does not match own cookie warnigns are normal idk how to fix them but they don't seem to matter
 
 ENTRYPOINT ["/opt/keycloak/bin/kc.sh"]
 # even though we build, using --optimized disallows postgresql databases so we need this workaround https://github.com/keycloak/keycloak/issues/15898
