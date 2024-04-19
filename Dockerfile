@@ -1,5 +1,5 @@
 # from https://quay.io/repository/phasetwo/keycloak-crdb    
-FROM quay.io/phasetwo/keycloak-crdb:latest as builder
+FROM quay.io/keycloak/keycloak:latest as builder
 
 # needed for cockroach support
 ENV KB_DB=cockroach
@@ -12,7 +12,7 @@ WORKDIR /opt/keycloak
 
 RUN keytool -genkeypair -storepass password -storetype PKCS12 -keyalg RSA -keysize 2048 -dname "CN=server" -alias server -ext "SAN:c=DNS:localhost,IP:0.0.0.0" -keystore conf/server.keystore
 #RUN /opt/keycloak/bin/kc.sh build
-FROM quay.io/phasetwo/keycloak-crdb:latest
+FROM quay.io/keycloak/keycloak:latest
 COPY --from=builder /opt/keycloak/ /opt/keycloak/
 COPY --from=builder /opt/keycloak/ /opt/keycloak/
 
