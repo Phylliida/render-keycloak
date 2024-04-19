@@ -111,7 +111,7 @@ ENV KEYCLOAK_ADMIN_PASSWORD=$ADMIN_PASSWORD
 
 
 #ENV KC_DB_URL=postgres://${DB_URL}:${DB_PORT}
-#ENV KC_DB_URL=jdbc:h2:tcp://${DB_USERNAME}:${DB_PASSWORD}@${DB_URL}:${DB_PORT}/${KC_DB_URL_DATABASE}
+ENV KC_DB_URL=jdbc:postgresql://${DB_URL}:${DB_PORT}/${KC_DB_URL_DATABASE}
 # ENV KC_DB_URL=jdbc:postgresql://${DB_URL}:${DB_PORT}/${DB_DATABASE}
 #ENV KEYCLOAK_HTTPS_CERTIFICATE=https://render-keycloak.onrender.com
 #ENV KEYCLOAK_HTTPS_KEY=https://render-keycloak.onrender.com
