@@ -55,6 +55,7 @@ ENV KC_HOSTNAME=render-keycloak.onrender.com
 ENV KC_HOSTNAME_ADMIN=render-keycloak.onrender.com
 ENV KC_HTTP_ENABLED=true
 ENV KC_HTTP_PORT=8443
+ENV KC_HTTPS_PORT=8444
 ENV KC_PROXY=edge
 ENV KC_LOG_LEVEL=INFO
 ENV KC_HOSTNAME_STRICT_HTTPS=false
@@ -67,8 +68,8 @@ ENV KEYCLOAK_ADMIN_PASSWORD=$ADMIN_PASSWORD
 #ENV KEYCLOAK_HTTPS_CERTIFICATE=https://render-keycloak.onrender.com
 #ENV KEYCLOAK_HTTPS_KEY=https://render-keycloak.onrender.com
 #ENV KC_HTTPS_PORT=8443
-EXPOSE 8442
 EXPOSE 8443
+EXPOSE 8444
 
 RUN mkdir -p $HOME/.postgresql
 # ADD ${CERT_PATH} $HOME/.postgresql/root.crt
