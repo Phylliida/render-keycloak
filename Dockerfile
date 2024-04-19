@@ -11,7 +11,7 @@ ENV KC_METRICS_ENABLED=true
 WORKDIR /opt/keycloak
 
 RUN keytool -genkeypair -storepass password -storetype PKCS12 -keyalg RSA -keysize 2048 -dname "CN=server" -alias server -ext "SAN:c=DNS:localhost,IP:0.0.0.0" -keystore conf/server.keystore
-RUN /opt/keycloak/bin/kc.sh build
+#RUN /opt/keycloak/bin/kc.sh build
 FROM quay.io/keycloak/keycloak:latest
 COPY --from=builder /opt/keycloak/ /opt/keycloak/
 COPY --from=builder /opt/keycloak/ /opt/keycloak/
@@ -62,7 +62,7 @@ ENV KC_PROXY=passthrough
 ENV KC_PROXY_HEADERS=xforwarded
 ENV KEYCLOAK_ADMIN=$ADMIN
 ENV KEYCLOAK_ADMIN_PASSWORD=$ADMIN_PASSWORD
-ENV KC_DB_URL=jdbc:h2//${DB_URL}:${DB_PORT}/${KC_DB_URL_DATABASE}
+ENV KC_DB_URL=jdbc:h2:ssl//${DB_URL}:${DB_PORT}/${KC_DB_URL_DATABASE}
 # ENV KC_DB_URL=jdbc:postgresql://${DB_URL}:${DB_PORT}/${DB_DATABASE}
 #ENV KEYCLOAK_HTTPS_CERTIFICATE=https://render-keycloak.onrender.com
 #ENV KEYCLOAK_HTTPS_KEY=https://render-keycloak.onrender.com
