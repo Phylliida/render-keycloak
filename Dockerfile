@@ -123,4 +123,4 @@ EXPOSE 8444
 # ADD ${CERT_PATH} $HOME/.postgresql/root.crt
 
 ENTRYPOINT ["/opt/keycloak/bin/kc.sh"]
-CMD ["start", "--optimized", "--verbose"]   
+CMD ["start", "--optimized"]   
