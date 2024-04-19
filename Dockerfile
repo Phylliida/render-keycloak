@@ -39,6 +39,8 @@ ENV KB_DB=cockroach
 ENV KC_TRANSACTION_XA_ENABLED=false
 ENV KC_TRANSACTION_JTA_ENABLED=false
 
+# set port 8443 to PORT environment variable in render
+
 ENV KC_HTTP_RELATIVE_PATH=/
 ENV PROXY_ADDRESS_FORWARDING=true
 ENV KC_DB_URL_HOST=cockroach
@@ -64,7 +66,7 @@ EXPOSE 8442
 EXPOSE 8443
 
 RUN mkdir -p $HOME/.postgresql
-ADD ${CERT_PATH} $HOME/.postgresql/root.crt
+# ADD ${CERT_PATH} $HOME/.postgresql/root.crt
 
 ENTRYPOINT ["/opt/keycloak/bin/kc.sh"]
 CMD ["start"]   
