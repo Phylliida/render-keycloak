@@ -5,7 +5,7 @@ FROM quay.io/keycloak/keycloak:21.1.1 as builder
 # ENV KB_DB=cockroach
 # ENV KC_TRANSACTION_XA_ENABLED=false
 # ENV KC_TRANSACTION_JTA_ENABLED=false
-
+ENV OPERATOR_KEYCLOAK_IMAGE=quay.io/keycloak/keycloak:21.1.1
 ENV KC_HEALTH_ENABLED=true
 ENV KC_METRICS_ENABLED=true
 WORKDIR /opt/keycloak
@@ -63,6 +63,7 @@ FROM quay.io/keycloak/keycloak:21.1.1
 COPY --from=builder /opt/keycloak/ /opt/keycloak/
 COPY --from=builder /opt/keycloak/ /opt/keycloak/
 
+ENV OPERATOR_KEYCLOAK_IMAGE=quay.io/keycloak/keycloak:21.1.1
 ARG ADMIN
 ARG ADMIN_PASSWORD
 
@@ -124,4 +125,6 @@ EXPOSE 8444
 # ADD ${CERT_PATH} $HOME/.postgresql/root.crt
 
 ENTRYPOINT ["/opt/keycloak/bin/kc.sh"]
+# even though we build, using --optimized disallows postgresql databases so we need this workaround https://github.com/keycloak/keycloak/issues/15898
+# in other words don't add optimzied here
 CMD ["start"]   
