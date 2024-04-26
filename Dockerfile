@@ -1,4 +1,4 @@
-FROM quay.io/phasetwo/keycloak-crdb:latest at builder
+FROM quay.io/phasetwo/keycloak-crdb:latest as builder
 # FROM quay.io/keycloak/keycloak:latest as builder
 
 # necessary to let us use cockroach
