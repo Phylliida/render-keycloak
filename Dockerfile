@@ -1,12 +1,12 @@
 # from https://quay.io/repository/phasetwo/keycloak-crdb    
-FROM quay.io/keycloak/keycloak:21.1.1 as builder
+FROM quay.io/keycloak/keycloak:latest as builder
 
 # needed for cockroach support
 # ENV KB_DB=cockroach
 # ENV KC_TRANSACTION_XA_ENABLED=false
 # ENV KC_TRANSACTION_JTA_ENABLED=false
 # necessary to let us use postgresql
-ENV OPERATOR_KEYCLOAK_IMAGE=quay.io/keycloak/keycloak:21.1.1
+ENV OPERATOR_KEYCLOAK_IMAGE=quay.io/keycloak/keycloak:latest
 ENV KC_HEALTH_ENABLED=true
 ENV KC_METRICS_ENABLED=true
 WORKDIR /opt/keycloak
@@ -61,12 +61,12 @@ ENV KC_DB_URL=jdbc:postgresql://${DB_URL}:${DB_PORT}/${DB_DATABASE}
 RUN keytool -genkeypair -storepass password -storetype PKCS12 -keyalg RSA -keysize 2048 -dname "CN=server" -alias server -ext "SAN:c=DNS:localhost,IP:0.0.0.0" -keystore conf/server.keystore
 # db may seem redundant but it is not
 RUN /opt/keycloak/bin/kc.sh build --db=postgres
-FROM quay.io/keycloak/keycloak:21.1.1
+FROM quay.io/keycloak/keycloak:latest
 COPY --from=builder /opt/keycloak/ /opt/keycloak/
 COPY --from=builder /opt/keycloak/ /opt/keycloak/
 
 # necessary to let us use postgresql
-ENV OPERATOR_KEYCLOAK_IMAGE=quay.io/keycloak/keycloak:21.1.1
+ENV OPERATOR_KEYCLOAK_IMAGE=quay.io/keycloak/keycloak:latest
 
 ARG ADMIN
 ARG ADMIN_PASSWORD
