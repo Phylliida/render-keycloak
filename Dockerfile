@@ -1,8 +1,8 @@
-from https://quay.io/repository/phasetwo/keycloak-crdb as builder
+FROM quay.io/phasetwo/keycloak-crdb:latest at builder
 # FROM quay.io/keycloak/keycloak:latest as builder
 
 # necessary to let us use cockroach
-ENV OPERATOR_KEYCLOAK_IMAGE=https://quay.io/repository/phasetwo/keycloak-crdb
+ENV OPERATOR_KEYCLOAK_IMAGE=quay.io/phasetwo/keycloak-crdb:latest
 
 # set these env variables
 ARG ADMIN
@@ -42,12 +42,12 @@ ENV KC_DB_URL=jdbc:postgresql://${DB_URL}:${DB_PORT}/${DB_DATABASE}
 
 # db may seem redundant but it is not
 RUN /opt/keycloak/bin/kc.sh build --db=cockroach
-FROM https://quay.io/repository/phasetwo/keycloak-crdb
+FROM quay.io/phasetwo/keycloak-crdb:latest
 COPY --from=builder /opt/keycloak/ /opt/keycloak/
 COPY --from=builder /opt/keycloak/ /opt/keycloak/
 
 # necessary to let us use cockroach db
-ENV OPERATOR_KEYCLOAK_IMAGE=https://quay.io/repository/phasetwo/keycloak-crdb
+ENV OPERATOR_KEYCLOAK_IMAGE=quay.io/phasetwo/keycloak-crdb:latest
 
 # set these env variables
 ARG ADMIN
