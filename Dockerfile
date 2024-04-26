@@ -1,8 +1,8 @@
-# from https://quay.io/repository/phasetwo/keycloak-crdb    
-FROM quay.io/keycloak/keycloak:latest as builder
+from quay.io/repository/phasetwo/keycloak-crdb as builder
+# FROM quay.io/keycloak/keycloak:latest as builder
 
 # necessary to let us use postgresql
-ENV OPERATOR_KEYCLOAK_IMAGE=quay.io/keycloak/keycloak:latest
+ENV OPERATOR_KEYCLOAK_IMAGE=quay.io/repository/phasetwo/keycloak-crdb
 
 # set these env variables
 ARG ADMIN
@@ -15,6 +15,7 @@ ARG DB_URL
 ARG DB_DATABASE
 ARG DB_PORT
 ARG DB_SCHEMA
+ARG CERT_PATH
 
 # set port 8443 to PORT environment variable in render
 ENV KC_HTTP_RELATIVE_PATH=/auth
@@ -34,17 +35,19 @@ ENV KC_PROXY=passthrough
 ENV KC_PROXY_HEADERS=xforwarded
 ENV KEYCLOAK_ADMIN=$ADMIN
 ENV KEYCLOAK_ADMIN_PASSWORD=$ADMIN_PASSWORD
-ENV KB_DB=postgres
+ENV KB_DB=cockroach
+ENV KC_TRANSACTION_XA_ENABLED=false
+ENV KC_TRANSACTION_JTA_ENABLED=false
 ENV KC_DB_URL=jdbc:postgresql://${DB_URL}:${DB_PORT}/${DB_DATABASE}
 
 # db may seem redundant but it is not
-RUN /opt/keycloak/bin/kc.sh build --db=postgres
-FROM quay.io/keycloak/keycloak:latest
+RUN /opt/keycloak/bin/kc.sh build --db=cockroach
+FROM quay.io/repository/phasetwo/keycloak-crdb
 COPY --from=builder /opt/keycloak/ /opt/keycloak/
 COPY --from=builder /opt/keycloak/ /opt/keycloak/
 
-# necessary to let us use postgresql
-ENV OPERATOR_KEYCLOAK_IMAGE=quay.io/keycloak/keycloak:latest
+# necessary to let us use cockroach db
+ENV OPERATOR_KEYCLOAK_IMAGE=quay.io/repository/phasetwo/keycloak-crdb
 
 # set these env variables
 ARG ADMIN
@@ -57,6 +60,7 @@ ARG DB_URL
 ARG DB_DATABASE
 ARG DB_PORT
 ARG DB_SCHEMA
+ARG CERT_PATH
 
 # set port 8443 to PORT environment variable in render
 ENV KC_HTTP_RELATIVE_PATH=/auth
@@ -76,8 +80,13 @@ ENV KC_PROXY=passthrough
 ENV KC_PROXY_HEADERS=xforwarded
 ENV KEYCLOAK_ADMIN=$ADMIN
 ENV KEYCLOAK_ADMIN_PASSWORD=$ADMIN_PASSWORD
-ENV KB_DB=postgres
+ENV KB_DB=cockroach
+ENV KC_TRANSACTION_XA_ENABLED=false
+ENV KC_TRANSACTION_JTA_ENABLED=false
 ENV KC_DB_URL=jdbc:postgresql://${DB_URL}:${DB_PORT}/${DB_DATABASE}
+
+RUN mkdir -p $HOME/.postgresql
+ADD ${CERT_PATH} $HOME/.postgresql/root.crt
 
 EXPOSE 8443
 EXPOSE 8444
@@ -87,4 +96,4 @@ EXPOSE 8444
 ENTRYPOINT ["/opt/keycloak/bin/kc.sh"]
 # even though we build, using --optimized disallows postgresql databases so we need this workaround https://github.com/keycloak/keycloak/issues/15898
 # in other words don't add optimzied here
-CMD ["start", "--db=postgres"]
+CMD ["start", "--db=cockroach"]
